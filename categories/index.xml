@@ -18,7 +18,7 @@
        <guid>/posts/javascript-throttling/</guid>
        <description>&lt;p&gt;Hello everyone!
 This post will be about a parallel computing trick I had to use.&lt;/p&gt;
-&lt;p&gt;So I needed to limit the umber of requests which are fired towards a third party API at the same time because of low threshold for DDoS there.
+&lt;p&gt;So I needed to limit the number of requests which are fired towards a third party API at the same time because of low threshold for DDoS there.
 Requests were sent from several places but both written in typescript so that is what I am going to use here.&lt;/p&gt;
 &lt;p&gt;TL;DR;&lt;br&gt;
 Here is the final function if you just want to copy and paste this for typescript:&lt;/p&gt;
