@@ -3,12 +3,17 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/tags/async/</loc>
+    <loc>/</loc>
     <lastmod>2020-07-25T10:19:18+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>/about/</loc>
+    <lastmod>2020-07-25T09:58:18+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/async/</loc>
     <lastmod>2020-07-25T10:19:18+02:00</lastmod>
   </url>
   
@@ -40,11 +45,6 @@
   <url>
     <loc>/tags/typescript/</loc>
     <lastmod>2020-07-25T10:19:18+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/introduction/</loc>
-    <lastmod>2020-07-25T09:58:18+02:00</lastmod>
   </url>
   
   <url>

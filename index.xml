@@ -1,9 +1,9 @@
 
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
  <channel>
-   <title>Bohdan Yarema&#39;s Personal Blog</title>
+   <title>Posts on Bohdan Yarema&#39;s Personal Blog</title>
    <link>/</link>
-   <description>Recent content on Bohdan Yarema&#39;s Personal Blog</description>
+   <description>Recent content in Posts on Bohdan Yarema&#39;s Personal Blog</description>
    <generator>Hugo -- gohugo.io</generator>
    <language>en-us</language>
    <lastBuildDate>Sat, 25 Jul 2020 10:19:18 +0200</lastBuildDate>
@@ -126,19 +126,6 @@ Secondly, though Promise.race waits for any one promise to finish, several can i
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here!&lt;br&gt;
 Now we can run requests in parallel but no more then &lt;code&gt;maximumLevelOfParallelism&lt;/code&gt; at a time.
 Thank you for reading and see you next time!&lt;/p&gt;
-</description>
-     </item>
-   
-     <item>
-       <title>Introduction</title>
-       <link>/posts/introduction/</link>
-       <pubDate>Sat, 25 Jul 2020 09:58:18 +0200</pubDate>
-       
-       <guid>/posts/introduction/</guid>
-       <description>&lt;p&gt;Hi. Welcome to my personal blog.
-My name is Bohdan Yarema, I come from Ukraine and am currently located at Eindhoven, Netherlands.
-As a senior software engineer I have developed a few creative decisions which I would like to share alongside some tutorials for things which I struggled with at first.&lt;/p&gt;
-&lt;p&gt;In my free time I enjoy board games, video games, some team sports and cycling.&lt;/p&gt;
 </description>
      </item>
    
