@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
  <channel>
    <title>async on Bohdan Yarema&#39;s Personal Blog</title>
-   <link>omarox.github.io/tags/async/</link>
+   <link>/tags/async/</link>
    <description>Recent content in async on Bohdan Yarema&#39;s Personal Blog</description>
    <generator>Hugo -- gohugo.io</generator>
    <language>en-us</language>
    <lastBuildDate>Sat, 25 Jul 2020 10:19:18 +0200</lastBuildDate>
    
-       <atom:link href="omarox.github.io/tags/async/index.xml" rel="self" type="application/rss+xml" />
+       <atom:link href="/tags/async/index.xml" rel="self" type="application/rss+xml" />
    
    
      <item>
        <title>Javascript Throttling</title>
-       <link>omarox.github.io/posts/javascript-throttling/</link>
+       <link>/posts/javascript-throttling/</link>
        <pubDate>Sat, 25 Jul 2020 10:19:18 +0200</pubDate>
        
-       <guid>omarox.github.io/posts/javascript-throttling/</guid>
+       <guid>/posts/javascript-throttling/</guid>
        <description>&lt;p&gt;Hello everyone!
 This post will be about a parallel computing trick I had to use.&lt;/p&gt;
 &lt;p&gt;So I needed to limit the umber of requests which are fired towards a third party API at the same time because of low threshold for DDoS there.
@@ -131,10 +131,10 @@ Thank you for reading and see you next time!&lt;/p&gt;
    
      <item>
        <title>Introduction</title>
-       <link>omarox.github.io/posts/introduction/</link>
+       <link>/posts/introduction/</link>
        <pubDate>Sat, 25 Jul 2020 09:58:18 +0200</pubDate>
        
-       <guid>omarox.github.io/posts/introduction/</guid>
+       <guid>/posts/introduction/</guid>
        <description>&lt;p&gt;Hi. Welcome to my personal blog.
 My name is Bohdan Yarema, I come from Ukraine and am currently located at Eindhoven, Netherlands.
 As a senior software engineer I have developed a few creating decisions which I would like to share alongside some tutorials for things which I struggled with at first.&lt;/p&gt;
