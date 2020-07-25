@@ -1,0 +1,251 @@
+<!doctype html>
+
+<html lang="en-us">
+
+<head>
+  <title>Bohdan Yarema&#39;s Personal Blog</title>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="The HTML5 Herald" />
+<meta name="author" content="" /><meta property="og:title" content="Javascript Throttling" />
+<meta property="og:description" content="Hello everyone! This post will be about a parallel computing trick I had to use.
+So I needed to limit the umber of requests which are fired towards a third party API at the same time because of low threshold for DDoS there. Requests were sent from several places but both written in typescript so that is what I am going to use here.
+TL;DR;
+Here is the final function if you just want to copy and paste this for typescript:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://https://omarox.github.io/posts/javascript-throttling/" />
+<meta property="article:published_time" content="2020-07-25T10:19:18+02:00" />
+<meta property="article:modified_time" content="2020-07-25T10:19:18+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Javascript Throttling"/>
+<meta name="twitter:description" content="Hello everyone! This post will be about a parallel computing trick I had to use.
+So I needed to limit the umber of requests which are fired towards a third party API at the same time because of low threshold for DDoS there. Requests were sent from several places but both written in typescript so that is what I am going to use here.
+TL;DR;
+Here is the final function if you just want to copy and paste this for typescript:"/>
+
+<meta name="generator" content="Hugo 0.74.3" />
+    
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="http://https:/omarox.github.io/fontawesome/css/all.min.css" />
+  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
+  
+  <link rel="stylesheet" type="text/css" href="/omarox.github.io/css/styles.css" /></head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="/omarox.github.io/">Bohdan Yarema&rsquo;s Personal Blog</a>
+            </h1>
+
+      <ul id="social-media">
+      </ul>
+      
+    </header>
+
+    
+<nav>
+    <ul>
+        
+    </ul>
+</nav>
+
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>Javascript Throttling</h1>
+
+    
+      <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2020-07-25T10:19:18&#43;02:00">Jul 25, 2020</time>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="/omarox.github.io/tags/javascript">#javascript</a>
+                
+                    , 
+                    <a href="/omarox.github.io/tags/typescript">#typescript</a>
+                
+                    , 
+                    <a href="/omarox.github.io/tags/async">#async</a>
+                
+                    , 
+                    <a href="/omarox.github.io/tags/parallel">#parallel</a>
+                
+            </em>
+        </li>
+        
+
+        <li>4 minutes read</li>
+    </ul>
+</aside>
+
+    
+
+    
+<div class="featured_image">
+    <a href="http://https://omarox.github.io/posts/javascript-throttling/" title="Javascript Throttling">
+        <img src="">
+    </a>
+</div>
+
+
+
+    <p>Hello everyone!
+This post will be about a parallel computing trick I had to use.</p>
+<p>So I needed to limit the umber of requests which are fired towards a third party API at the same time because of low threshold for DDoS there.
+Requests were sent from several places but both written in typescript so that is what I am going to use here.</p>
+<p>TL;DR;<br>
+Here is the final function if you just want to copy and paste this for typescript:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">throttleAllAsync</span>(
+    <span style="color:#a6e22e">maximumLevelOfParallelism</span>: <span style="color:#66d9ef">number</span>,
+    <span style="color:#a6e22e">promiseProducers</span><span style="color:#f92672">:</span> (() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">Promise</span>&lt;<span style="color:#f92672">any</span>&gt;)[]) {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromises</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">maximumLevelOfParallelism</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">p</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">p</span>());
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">maximumLevelOfParallelism</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromise</span>: <span style="color:#66d9ef">Promise</span>&lt;<span style="color:#f92672">any</span>&gt; <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>[<span style="color:#a6e22e">i</span>]().<span style="color:#a6e22e">then</span>(() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">splice</span>(<span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">activePromise</span>)));
+        <span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">activePromise</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">maximumLevelOfParallelism</span>) {
+            <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">race</span>(<span style="color:#a6e22e">activePromises</span>);
+        }
+    }
+
+    <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">activePromises</span>);
+}
+</code></pre></div><p>Or this for javascript:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">throttleAllAsync</span>(<span style="color:#a6e22e">maximumLevelOfParallelism</span>, <span style="color:#a6e22e">promiseProducers</span>) {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromises</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">maximumLevelOfParallelism</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">p</span> =&gt; <span style="color:#a6e22e">p</span>());
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">maximumLevelOfParallelism</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromise</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>[<span style="color:#a6e22e">i</span>]().<span style="color:#a6e22e">then</span>(() =&gt; <span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">splice</span>(<span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">activePromise</span>)));
+        <span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">activePromise</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">maximumLevelOfParallelism</span>) {
+            <span style="color:#a6e22e">await</span> Promise.<span style="color:#a6e22e">race</span>(<span style="color:#a6e22e">activePromises</span>);
+        }
+    }
+
+    <span style="color:#a6e22e">await</span> Promise.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">activePromises</span>);
+}
+</code></pre></div><p>You are still here? Good!
+Let&rsquo;s retrace the steps I did while creating this function.</p>
+<p>Keep in mind, I have only been doing js/ts for a couple of months, so a lot of thing I just had to figure out from scratch.</p>
+<p>First I needed a way to run all promises. That&rsquo;s easy!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">all</span>([]);
+</code></pre></div><p>And then the target function signature is</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">throttleAllAsync</span>(<span style="color:#a6e22e">maximumLevelOfParallelism</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">promises</span>: <span style="color:#66d9ef">Promise</span>&lt;<span style="color:#f92672">any</span>&gt;[])
+</code></pre></div><p>Unfortunately there is no way to configure the maximum number of promises being currently executed for <code>Promise.all</code>.
+Also as soon as you create a promise it already starts execution.
+The only thing that await or <code>Promise.all</code> do is that they wait for the result to be available.
+They have nothing to do with the actual execution.</p>
+<p>With this in mind let&rsquo;s change the signature to something which will not run the promises before we need it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">throttleAllAsync</span>(<span style="color:#a6e22e">maximumLevelOfParallelism</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">promiseProducers</span><span style="color:#f92672">:</span> (() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">Promise</span>&lt;<span style="color:#f92672">any</span>&gt;)[])
+</code></pre></div><p>Here. Now the caller has to pass lambda&rsquo;s or functions which create promises.
+Now. Let&rsquo;s use <code>Promise.all</code> but only for a slice of the array.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">throttleAllAsync</span>(
+    <span style="color:#a6e22e">maximumLevelOfParallelism</span>: <span style="color:#66d9ef">number</span>,
+    <span style="color:#a6e22e">promiseProducers</span><span style="color:#f92672">:</span> (() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">Promise</span>&lt;<span style="color:#f92672">any</span>&gt;)[]) {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromises</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">maximumLevelOfParallelism</span>).<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">p</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">p</span>());
+    <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">activePromises</span>);
+}
+</code></pre></div><p>This will run first <code>maximumLevelOfParallelism</code> of promises. Let&rsquo;s make it so it runs all of them eventually.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">throttleAllAsync</span>(
+    <span style="color:#a6e22e">maximumLevelOfParallelism</span>: <span style="color:#66d9ef">number</span>,
+    <span style="color:#a6e22e">promiseProducers</span><span style="color:#f92672">:</span> (() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">Promise</span>&lt;<span style="color:#f92672">any</span>&gt;)[]) {
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">length</span>) {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromises</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#a6e22e">i</span>, Math.<span style="color:#a6e22e">min</span>(<span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">maximumLevelOfParallelism</span>)).<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">p</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">p</span>());
+        <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">activePromises</span>);
+    }
+}
+</code></pre></div><p>This is good but there is one issue.
+It doesn&rsquo;t always run <code>maximumLevelOfParallelism</code> of promises. As soon as one finishes, then one less are running at the same time.
+We would want to be a bit more effective.
+But how do we add a promise as soon as one of them finishes?
+Well, for that we are going to use</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">race</span>([]);
+</code></pre></div><p>This function await till any one of the promises finishes.
+So we can wait for any one to finish and then add a new one to the array.
+We also need to remove the finished one. We can do this by using <code>then</code> on a promise to then also remove it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">throttleAllAsync</span>(
+    <span style="color:#a6e22e">maximumLevelOfParallelism</span>: <span style="color:#66d9ef">number</span>,
+    <span style="color:#a6e22e">promiseProducers</span><span style="color:#f92672">:</span> (() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">Promise</span>&lt;<span style="color:#f92672">any</span>&gt;)[]) {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromises</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">maximumLevelOfParallelism</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">p</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">p</span>());
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">maximumLevelOfParallelism</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromise</span>: <span style="color:#66d9ef">Promise</span>&lt;<span style="color:#f92672">any</span>&gt; <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>[<span style="color:#a6e22e">i</span>]().<span style="color:#a6e22e">then</span>(() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">splice</span>(<span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">activePromise</span>)));
+        <span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">activePromise</span>);
+        <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">race</span>(<span style="color:#a6e22e">activePromises</span>);
+    }
+
+    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">length</span>) {
+        <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">race</span>(<span style="color:#a6e22e">activePromises</span>);
+    }
+}
+</code></pre></div><p>We are almost there!
+There are still two thing to improve here.
+Firtly, we don&rsquo;t need to race them one by one at the end, we can just use te Promise.all that we saw earlier.
+Secondly, though Promise.race waits for any one promise to finish, several can in fact finish before we add more to the pool.</p>
+<p>Including these two ideas brings us to the final code!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#a6e22e">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">throttleAllAsync</span>(
+    <span style="color:#a6e22e">maximumLevelOfParallelism</span>: <span style="color:#66d9ef">number</span>,
+    <span style="color:#a6e22e">promiseProducers</span><span style="color:#f92672">:</span> (() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">Promise</span>&lt;<span style="color:#f92672">any</span>&gt;)[]) {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromises</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">maximumLevelOfParallelism</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">map</span>(<span style="color:#a6e22e">p</span> <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">p</span>());
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">maximumLevelOfParallelism</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">promiseProducers</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">activePromise</span>: <span style="color:#66d9ef">Promise</span>&lt;<span style="color:#f92672">any</span>&gt; <span style="color:#f92672">=</span> <span style="color:#a6e22e">promiseProducers</span>[<span style="color:#a6e22e">i</span>]().<span style="color:#a6e22e">then</span>(() <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">splice</span>(<span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">activePromise</span>)));
+        <span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">activePromise</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">activePromises</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">maximumLevelOfParallelism</span>) {
+            <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">race</span>(<span style="color:#a6e22e">activePromises</span>);
+        }
+    }
+
+    <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">Promise</span>.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">activePromises</span>);
+}
+</code></pre></div><p>Here!<br>
+Now we can run requests in parallel but no more then <code>maximumLevelOfParallelism</code> at a time.
+Thank you for reading and see you next time!</p>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="http://https://omarox.github.io/posts/introduction/"><i class="fa fa-chevron-circle-left"></i> Introduction</a>
+        </li>
+        
+        
+    </ul>
+</section>
+  
+    
+    
+  
+
+
+
+
+
+</main>
+    <footer>
+    </footer>
+</div>
+<script src="/omarox.github.io/js/scripts.js"></script>
+
+</body>
+
+</html>
+
