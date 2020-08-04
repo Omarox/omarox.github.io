@@ -6,10 +6,226 @@
    <description>Recent content in javascript on Bohdan Yarema&#39;s Personal Blog</description>
    <generator>Hugo -- gohugo.io</generator>
    <language>en-us</language>
-   <lastBuildDate>Sat, 25 Jul 2020 10:19:18 +0200</lastBuildDate>
+   <lastBuildDate>Tue, 04 Aug 2020 18:10:11 +0200</lastBuildDate>
    
        <atom:link href="/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
    
+   
+     <item>
+       <title>Sticky Component in React with hooks</title>
+       <link>/posts/react-sticky-component/</link>
+       <pubDate>Tue, 04 Aug 2020 18:10:11 +0200</pubDate>
+       
+       <guid>/posts/react-sticky-component/</guid>
+       <description>&lt;p&gt;Hello and welcome to another How-To!&lt;/p&gt;
+&lt;p&gt;Today we will talk about sticky elements for web pages written in React.&lt;br&gt;
+By sticky elements I mean something that is displayed on the screen and remains in the same spot when we scroll.
+We will create one as a functional component using React hooks which can show any other component as a sticky header.&lt;br&gt;
+The same principles can also be used for React Native with little modifications of the code.&lt;/p&gt;
+&lt;p&gt;TL;DR;&lt;br&gt;
+Here is the final function if you just want to copy and paste this for typescript:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;React&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;CSSProperties&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;PropsWithChildren&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt; } &lt;span style=&#34;color:#a6e22e&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;react&amp;#39;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sticky&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;PropsWithChildren&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;{}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;undefined&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;undefined&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setHeight&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setStyle&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;CSSProperties&lt;/span&gt;&amp;gt;({});
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;HTMLDivElement&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;(() &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;current&lt;/span&gt;) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;current&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getBoundingClientRect&lt;/span&gt;()
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;) {
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;);
+            }
+
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;) {
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;setHeight&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;);
+            }
+        }
+    });
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;(() &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;setStyle&lt;/span&gt;({ &lt;span style=&#34;color:#a6e22e&#34;&gt;position&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;fixed&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;top&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;offset&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;zIndex&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;99&lt;/span&gt; });
+        }
+    }, [&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;]);
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (
+        &amp;lt;&amp;gt;
+            &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ref&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;} &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;}&amp;gt;
+                {&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;children&lt;/span&gt;}
+            &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+            &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{{ &lt;span style=&#34;color:#a6e22e&#34;&gt;visibility&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;hidden&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt; }} /&amp;gt;
+        &amp;lt;/&amp;gt;
+    );
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As for the more curious of you let&amp;rsquo;s once again retrace the thought process and creation of this component.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s figure out our function signature.&lt;br&gt;
+I would like to use out component like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (
+    ...
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;Sticky&lt;/span&gt;&amp;gt;
+        &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt;&amp;gt;
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;This&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;is&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;out&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sticky&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;element&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;
+        &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;h1&lt;/span&gt;&amp;gt;
+    &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;Sticky&lt;/span&gt;&amp;gt;
+    ...
+)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To use it like that we need something that takes children and displays them.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sticky&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;PropsWithChildren&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;{}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;children&lt;/span&gt;;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;First let&amp;rsquo;s figure out how to display a sticky header using CSS.
+For that we can use &lt;code&gt;position: &#39;fixed&#39;&lt;/code&gt;.
+We need an element around children that we can apply styles to.&lt;/p&gt;
+&lt;p&gt;That leaves us with&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sticky&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;PropsWithChildren&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;{}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (
+        &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{{ &lt;span style=&#34;color:#a6e22e&#34;&gt;position&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;fixed&amp;#39;&lt;/span&gt; }}&amp;gt;
+            {&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;children&lt;/span&gt;}
+        &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+    );
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Well, if you put this component inside of an existing page ot put anything else in the same page you&amp;rsquo;ll notice several issues.&lt;br&gt;
+Firstly, the component stickes to the top of the screen.&lt;br&gt;
+Secondly, it overlaps with another not fixed component that now also occupies the same spot.&lt;br&gt;
+Thirdly when we scroll our sticky component &amp;ldquo;dives&amp;rdquo; under other components.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s fix this issues one by one from easiest to touphest to solve.&lt;br&gt;
+For our component not to dive beneath other elements we can use &lt;code&gt;zIndex: 99&lt;/code&gt;. 99 here is an arbitrary value. I just picked something high enough to typically stay on top. You can choose higher or lower values as you please.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sticky&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;PropsWithChildren&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;{}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (
+        &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{{ &lt;span style=&#34;color:#a6e22e&#34;&gt;position&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;fixed&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;zIndex&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;99&lt;/span&gt; }}&amp;gt;
+            {&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;children&lt;/span&gt;}
+        &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+    );
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next we shall make out component to stay in the correct spot instead of at the top of the screen.
+In the styles we can use &lt;code&gt;top&lt;/code&gt; for that. But what shall be the value?
+Well, we can get the vertical offset of the element relative to page top.
+To get an element from out code we&amp;rsquo;ll use the first hook - &lt;code&gt;useRef&lt;/code&gt;.
+Then we need to store the offset somewhere and use it in out styles. That&amp;rsquo;s another hook - &lt;code&gt;useState&lt;/code&gt;.&lt;br&gt;
+That leaves us with&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;React&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;CSSProperties&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;PropsWithChildren&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt; } &lt;span style=&#34;color:#a6e22e&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;react&amp;#39;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sticky&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;PropsWithChildren&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;{}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;undefined&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;undefined&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setStyle&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;CSSProperties&lt;/span&gt;&amp;gt;({});
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;HTMLDivElement&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (
+        &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ref&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;} &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;}&amp;gt;
+            {&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;children&lt;/span&gt;}
+        &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+    );
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We aren&amp;rsquo;t doing anything yet though. And our component isn&amp;rsquo;t even sticky now.&lt;br&gt;
+Don&amp;rsquo;t worry, we are about to change thet using the net hook to be introduced - &lt;code&gt;useEffect&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;As you might have noticed we defined offset as &lt;code&gt;number | undefined&lt;/code&gt; with undefined as initial value.
+Why is that? Well, we wan&amp;rsquo;t to use the offset to set the style. We only want to do that when the offset is what we need it to be.
+Zero can be a valid value but then you don&amp;rsquo;t know if zero is initial value or the one we set form our code. So undefined works better and is also semantically more correct.&lt;/p&gt;
+&lt;p&gt;But let&amp;rsquo;s set the value then. Do not forget then on first render the ref has a value of null.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;React&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;CSSProperties&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;PropsWithChildren&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt; } &lt;span style=&#34;color:#a6e22e&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;react&amp;#39;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sticky&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;PropsWithChildren&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;{}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;undefined&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;undefined&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setStyle&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;CSSProperties&lt;/span&gt;&amp;gt;({});
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;HTMLDivElement&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;(() &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;current&lt;/span&gt;) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;current&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getBoundingClientRect&lt;/span&gt;()
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;) {
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;);
+            }
+        }
+    });
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (
+        &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ref&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;} &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;}&amp;gt;
+            {&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;children&lt;/span&gt;}
+        &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+    );
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will set the offset if it wasn&amp;rsquo;t set yet. Which means that this piece of code will only trigger one state change and therefore but a single additional render.
+Which is of course something we want, as with the growingly complex pages the less render - the fewer sloweness user will experience.&lt;/p&gt;
+&lt;p&gt;Now let&amp;rsquo;s also set the style finally with what we need:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;React&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;CSSProperties&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;PropsWithChildren&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt; } &lt;span style=&#34;color:#a6e22e&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;react&amp;#39;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sticky&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;PropsWithChildren&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;{}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;undefined&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;undefined&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setStyle&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;CSSProperties&lt;/span&gt;&amp;gt;({});
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;HTMLDivElement&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;(() &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;current&lt;/span&gt;) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;) {
+                &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;current&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getBoundingClientRect&lt;/span&gt;()
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;);
+            }
+        }
+    });
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;(() &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;setStyle&lt;/span&gt;({ &lt;span style=&#34;color:#a6e22e&#34;&gt;position&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;fixed&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;top&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;offset&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;zIndex&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;99&lt;/span&gt; });
+        }
+    }, [&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;]);
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (
+        &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ref&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;} &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;}&amp;gt;
+            {&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;children&lt;/span&gt;}
+        &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+    );
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here we use a useEffect with a guard - &lt;code&gt;[offset]&lt;/code&gt;. Well, that&amp;rsquo;s because we only want to run this effect whenever the offset changes.&lt;br&gt;
+This will therefore result in only one additional render as well.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s run this. Now it should remein in the same place when you scroll while adding the minimal number of renders.
+This leaves us with the last issue to solve - as soon as the style is set the space which was occupied by out component will become vacant and will be filled up by other components.&lt;br&gt;
+What we will do to prevent this - create an empty invisible element with the same height as our children and place it there to keep the spae occupied.&lt;/p&gt;
+&lt;p&gt;This brings us to the final code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;React&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;CSSProperties&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;PropsWithChildren&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt; } &lt;span style=&#34;color:#a6e22e&#34;&gt;from&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;react&amp;#39;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sticky&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;PropsWithChildren&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;{}&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt; &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;undefined&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;undefined&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setHeight&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;number&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; [&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;setStyle&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useState&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;CSSProperties&lt;/span&gt;&amp;gt;({});
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useRef&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;HTMLDivElement&lt;/span&gt;&amp;gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;(() &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;current&lt;/span&gt;) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;current&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;getBoundingClientRect&lt;/span&gt;()
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;) {
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;setOffset&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;y&lt;/span&gt;);
+            }
+
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;) {
+                &lt;span style=&#34;color:#a6e22e&#34;&gt;setHeight&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;boundingRectangle&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt;);
+            }
+        }
+    });
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;(() &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;) {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;setStyle&lt;/span&gt;({ &lt;span style=&#34;color:#a6e22e&#34;&gt;position&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;fixed&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;top&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;offset&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;zIndex&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;99&lt;/span&gt; });
+        }
+    }, [&lt;span style=&#34;color:#a6e22e&#34;&gt;offset&lt;/span&gt;]);
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; (
+        &amp;lt;&amp;gt;
+            &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ref&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;elementRef&lt;/span&gt;} &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;}&amp;gt;
+                {&lt;span style=&#34;color:#a6e22e&#34;&gt;props&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;children&lt;/span&gt;}
+            &amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt;&amp;gt;
+            &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;div&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;style&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{{ &lt;span style=&#34;color:#a6e22e&#34;&gt;visibility&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;hidden&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;height&lt;/span&gt; }} /&amp;gt;
+        &amp;lt;/&amp;gt;
+    );
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;height !== boundingRectangle.height&lt;/code&gt; once again limits the number of renders that we generate as a result of state changes.&lt;br&gt;
+Empty &lt;code&gt;&amp;lt;&amp;gt;&lt;/code&gt; tag allows us to nest several components under one while not creating a DOM element. This is a shortcut for &lt;code&gt;&amp;lt;Fragment&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Thanks for sticking around!&lt;br&gt;
+I hope this gave you some ideas at the very least and maybe also was helpful in seeing how some React hooks could be used.
+See you next time!&lt;/p&gt;</description>
+     </item>
    
      <item>
        <title>Javascript Throttling</title>
@@ -125,8 +341,7 @@ Secondly, though Promise.race waits for any one promise to finish, several can i
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here!&lt;br&gt;
 Now we can run requests in parallel but no more then &lt;code&gt;maximumLevelOfParallelism&lt;/code&gt; at a time.
-Thank you for reading and see you next time!&lt;/p&gt;
-</description>
+Thank you for reading and see you next time!&lt;/p&gt;</description>
      </item>
    
  </channel>

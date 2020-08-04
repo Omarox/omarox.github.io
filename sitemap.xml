@@ -4,7 +4,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2020-07-25T10:19:18+02:00</lastmod>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
   </url>
   
   <url>
@@ -13,12 +13,47 @@
   </url>
   
   <url>
-    <loc>/tags/async/</loc>
-    <lastmod>2020-07-25T10:19:18+02:00</lastmod>
+    <loc>/tags/javascript/</loc>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/javascript/</loc>
+    <loc>/posts/</loc>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/react/</loc>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/react-components/</loc>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/react-hooks/</loc>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/react-sticky-component/</loc>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/typescript/</loc>
+    <lastmod>2020-08-04T18:10:11+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/async/</loc>
     <lastmod>2020-07-25T10:19:18+02:00</lastmod>
   </url>
   
@@ -29,21 +64,6 @@
   
   <url>
     <loc>/tags/parallel/</loc>
-    <lastmod>2020-07-25T10:19:18+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/posts/</loc>
-    <lastmod>2020-07-25T10:19:18+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-07-25T10:19:18+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/typescript/</loc>
     <lastmod>2020-07-25T10:19:18+02:00</lastmod>
   </url>
   
