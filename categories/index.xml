@@ -308,7 +308,7 @@ Let&amp;rsquo;s retrace the steps I did while creating this function.&lt;/p&gt;
     &lt;span style=&#34;color:#a6e22e&#34;&gt;maxParallelism&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;number&lt;/span&gt;,
     &lt;span style=&#34;color:#a6e22e&#34;&gt;promises&lt;/span&gt;: &lt;span style=&#34;color:#66d9ef&#34;&gt;Promise&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;any&lt;/span&gt;&amp;gt;[])
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Unfortunately, there is no way to configure the maximum number of promises being currently executed for &lt;code&gt;Promise.all&lt;/code&gt;.
-Also as soon as you create a promise it already starts execution.
+On top of that, as soon as you create a promise it already starts execution.
 The only thing that await or &lt;code&gt;Promise.all&lt;/code&gt; do is that they wait for the result to be available.
 They have nothing to do with the actual execution.&lt;/p&gt;
 &lt;p&gt;With this in mind let&amp;rsquo;s change the signature to something which will not run the promises before we need it.&lt;/p&gt;

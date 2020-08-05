@@ -188,7 +188,7 @@ Let&rsquo;s retrace the steps I did while creating this function.</p>
     <span style="color:#a6e22e">maxParallelism</span>: <span style="color:#66d9ef">number</span>,
     <span style="color:#a6e22e">promises</span>: <span style="color:#66d9ef">Promise</span>&lt;<span style="color:#f92672">any</span>&gt;[])
 </code></pre></div><p>Unfortunately, there is no way to configure the maximum number of promises being currently executed for <code>Promise.all</code>.
-Also as soon as you create a promise it already starts execution.
+On top of that, as soon as you create a promise it already starts execution.
 The only thing that await or <code>Promise.all</code> do is that they wait for the result to be available.
 They have nothing to do with the actual execution.</p>
 <p>With this in mind let&rsquo;s change the signature to something which will not run the promises before we need it.</p>
