@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
  <channel>
    <title>async on Bohdan Yarema&#39;s Personal Blog</title>
-   <link>/tags/async/</link>
+   <link>https://omarox.github.io/tags/async/</link>
    <description>Recent content in async on Bohdan Yarema&#39;s Personal Blog</description>
    <generator>Hugo -- gohugo.io</generator>
    <language>en-us</language>
    <lastBuildDate>Sat, 25 Jul 2020 10:19:18 +0200</lastBuildDate>
    
-       <atom:link href="/tags/async/index.xml" rel="self" type="application/rss+xml" />
+       <atom:link href="https://omarox.github.io/tags/async/index.xml" rel="self" type="application/rss+xml" />
    
    
      <item>
        <title>Sticky Component in React with hooks</title>
-       <link>/posts/react-sticky-component/</link>
+       <link>https://omarox.github.io/posts/react-sticky-component/</link>
        <pubDate>Tue, 04 Aug 2020 18:10:11 +0200</pubDate>
        
-       <guid>/posts/react-sticky-component/</guid>
+       <guid>https://omarox.github.io/posts/react-sticky-component/</guid>
        <description>&lt;p&gt;Hello and welcome to another How-To!&lt;/p&gt;
 &lt;p&gt;Today we will talk about sticky elements for web pages written in React.&lt;br&gt;
 By sticky elements I mean something that is displayed on the screen and remains in the same spot when we scroll.
@@ -229,10 +229,10 @@ See you next time!&lt;/p&gt;</description>
    
      <item>
        <title>Javascript Throttling</title>
-       <link>/posts/javascript-throttling/</link>
+       <link>https://omarox.github.io/posts/javascript-throttling/</link>
        <pubDate>Sat, 25 Jul 2020 10:19:18 +0200</pubDate>
        
-       <guid>/posts/javascript-throttling/</guid>
+       <guid>https://omarox.github.io/posts/javascript-throttling/</guid>
        <description>&lt;p&gt;Hello everyone!
 This post will be about a parallel computing trick I had to use.&lt;/p&gt;
 &lt;p&gt;So I needed to limit the number of requests which are fired towards a third party API at the same time because of low threshold for DDoS there.
