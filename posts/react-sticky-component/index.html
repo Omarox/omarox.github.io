@@ -14,7 +14,7 @@ By sticky elements I mean something that is displayed on the screen and remains 
 We will create one as a functional component using React hooks which can show any other component as a sticky header.
 The same principles can also be used for React Native with little modifications of the code.
 TL;DR;
-Here is the final function if you just want to copy and paste this for typescript:" />
+You are just here to copy the working solution and paste it in your code? Here you go!" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://omarox.github.io/posts/react-sticky-component/" />
 <meta property="article:published_time" content="2020-08-04T18:10:11+02:00" />
@@ -28,7 +28,7 @@ By sticky elements I mean something that is displayed on the screen and remains 
 We will create one as a functional component using React hooks which can show any other component as a sticky header.
 The same principles can also be used for React Native with little modifications of the code.
 TL;DR;
-Here is the final function if you just want to copy and paste this for typescript:"/>
+You are just here to copy the working solution and paste it in your code? Here you go!"/>
 
 <meta name="generator" content="Hugo 0.74.3" />
     
@@ -149,8 +149,13 @@ By sticky elements I mean something that is displayed on the screen and remains 
 We will create one as a functional component using React hooks which can show any other component as a sticky header.<br>
 The same principles can also be used for React Native with little modifications of the code.</p>
 <p>TL;DR;<br>
-Here is the final function if you just want to copy and paste this for typescript:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, { <span style="color:#a6e22e">CSSProperties</span>, <span style="color:#a6e22e">PropsWithChildren</span>, <span style="color:#a6e22e">useEffect</span>, <span style="color:#a6e22e">useRef</span>, <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
+You are just here to copy the working solution and paste it in your code? Here you go!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, {
+    <span style="color:#a6e22e">CSSProperties</span>,
+    <span style="color:#a6e22e">PropsWithChildren</span>,
+    <span style="color:#a6e22e">useEffect</span>,
+    <span style="color:#a6e22e">useRef</span>,
+    <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
 
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Sticky</span>(<span style="color:#a6e22e">props</span>: <span style="color:#66d9ef">PropsWithChildren</span><span style="color:#f92672">&lt;</span>{}<span style="color:#f92672">&gt;</span>) {
     <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">offset</span>, <span style="color:#a6e22e">setOffset</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">useState</span>&lt;<span style="color:#f92672">number</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">undefined</span>&gt;(<span style="color:#66d9ef">undefined</span>);
@@ -160,13 +165,13 @@ Here is the final function if you just want to copy and paste this for typescrip
 
     <span style="color:#a6e22e">useEffect</span>(() <span style="color:#f92672">=&gt;</span> {
         <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>) {
-            <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">boundingRectangle</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">getBoundingClientRect</span>()
+            <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">boundingRect</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">getBoundingClientRect</span>();
             <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">offset</span>) {
-                <span style="color:#a6e22e">setOffset</span>(<span style="color:#a6e22e">boundingRectangle</span>.<span style="color:#a6e22e">y</span>);
+                <span style="color:#a6e22e">setOffset</span>(<span style="color:#a6e22e">boundingRect</span>.<span style="color:#a6e22e">y</span>);
             }
 
-            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">height</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">boundingRectangle</span>.<span style="color:#a6e22e">height</span>) {
-                <span style="color:#a6e22e">setHeight</span>(<span style="color:#a6e22e">boundingRectangle</span>.<span style="color:#a6e22e">height</span>);
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">height</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">boundingRect</span>.<span style="color:#a6e22e">height</span>) {
+                <span style="color:#a6e22e">setHeight</span>(<span style="color:#a6e22e">boundingRect</span>.<span style="color:#a6e22e">height</span>);
             }
         }
     });
@@ -186,7 +191,7 @@ Here is the final function if you just want to copy and paste this for typescrip
         &lt;/&gt;
     );
 }
-</code></pre></div><p>As for the more curious of you let&rsquo;s once again retrace the thought process and creation of this component.</p>
+</code></pre></div><p>As for the more curious out of you let&rsquo;s once again retrace the thought process and creation of this component.</p>
 <p>Let&rsquo;s figure out our function signature.<br>
 I would like to use out component like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">return</span> (
@@ -202,7 +207,7 @@ I would like to use out component like this:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Sticky</span>(<span style="color:#a6e22e">props</span>: <span style="color:#66d9ef">PropsWithChildren</span><span style="color:#f92672">&lt;</span>{}<span style="color:#f92672">&gt;</span>) {
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">props</span>.<span style="color:#a6e22e">children</span>;
 }
-</code></pre></div><p>First let&rsquo;s figure out how to display a sticky header using CSS.
+</code></pre></div><p>First, let&rsquo;s figure out how to display a sticky header using CSS.
 For that we can use <code>position: 'fixed'</code>.
 We need an element around children that we can apply styles to.</p>
 <p>That leaves us with</p>
@@ -213,11 +218,11 @@ We need an element around children that we can apply styles to.</p>
         &lt;/<span style="color:#f92672">div</span>&gt;
     );
 }
-</code></pre></div><p>Well, if you put this component inside of an existing page ot put anything else in the same page you&rsquo;ll notice several issues.<br>
-Firstly, the component stickes to the top of the screen.<br>
+</code></pre></div><p>Well, if you put this component inside of an existing page or put anything else on the same page you&rsquo;ll notice several issues.<br>
+Firstly, the component sticks to the top of the screen.<br>
 Secondly, it overlaps with another not fixed component that now also occupies the same spot.<br>
-Thirdly when we scroll our sticky component &ldquo;dives&rdquo; under other components.</p>
-<p>Let&rsquo;s fix this issues one by one from easiest to touphest to solve.<br>
+Thirdly, when we scroll our sticky component &ldquo;dives&rdquo; under other components.</p>
+<p>Let&rsquo;s fix these issues one by one from easiest to toughest to solve.<br>
 For our component not to dive beneath other elements we can use <code>zIndex: 99</code>. 99 here is an arbitrary value. I just picked something high enough to typically stay on top. You can choose higher or lower values as you please.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Sticky</span>(<span style="color:#a6e22e">props</span>: <span style="color:#66d9ef">PropsWithChildren</span><span style="color:#f92672">&lt;</span>{}<span style="color:#f92672">&gt;</span>) {
     <span style="color:#66d9ef">return</span> (
@@ -229,10 +234,14 @@ For our component not to dive beneath other elements we can use <code>zIndex: 99
 </code></pre></div><p>Next we shall make out component to stay in the correct spot instead of at the top of the screen.
 In the styles we can use <code>top</code> for that. But what shall be the value?
 Well, we can get the vertical offset of the element relative to page top.
-To get an element from out code we&rsquo;ll use the first hook - <code>useRef</code>.
+To get an element from our code we&rsquo;ll use the first hook - <code>useRef</code>.
 Then we need to store the offset somewhere and use it in out styles. That&rsquo;s another hook - <code>useState</code>.<br>
 That leaves us with</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, { <span style="color:#a6e22e">CSSProperties</span>, <span style="color:#a6e22e">PropsWithChildren</span>, <span style="color:#a6e22e">useEffect</span>, <span style="color:#a6e22e">useRef</span>, <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, {
+    <span style="color:#a6e22e">CSSProperties</span>,
+    <span style="color:#a6e22e">PropsWithChildren</span>,
+    <span style="color:#a6e22e">useRef</span>,
+    <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
 
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Sticky</span>(<span style="color:#a6e22e">props</span>: <span style="color:#66d9ef">PropsWithChildren</span><span style="color:#f92672">&lt;</span>{}<span style="color:#f92672">&gt;</span>) {
     <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">offset</span>, <span style="color:#a6e22e">setOffset</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">useState</span>&lt;<span style="color:#f92672">number</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">undefined</span>&gt;(<span style="color:#66d9ef">undefined</span>);
@@ -246,12 +255,17 @@ That leaves us with</p>
     );
 }
 </code></pre></div><p>We aren&rsquo;t doing anything yet though. And our component isn&rsquo;t even sticky now.<br>
-Don&rsquo;t worry, we are about to change thet using the net hook to be introduced - <code>useEffect</code>.</p>
+Don&rsquo;t worry, we are about to change that using the next hook to be introduced - <code>useEffect</code>.</p>
 <p>As you might have noticed we defined offset as <code>number | undefined</code> with undefined as initial value.
-Why is that? Well, we wan&rsquo;t to use the offset to set the style. We only want to do that when the offset is what we need it to be.
-Zero can be a valid value but then you don&rsquo;t know if zero is initial value or the one we set form our code. So undefined works better and is also semantically more correct.</p>
-<p>But let&rsquo;s set the value then. Do not forget then on first render the ref has a value of null.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, { <span style="color:#a6e22e">CSSProperties</span>, <span style="color:#a6e22e">PropsWithChildren</span>, <span style="color:#a6e22e">useEffect</span>, <span style="color:#a6e22e">useRef</span>, <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
+Why is that? Well, we want to use the offset to set the style. We only want to do that when the offset is what we need it to be.
+Zero can be a valid value, but then you don&rsquo;t know if zero is initial value or the one we set form our code. So undefined works better and is also semantically more correct.</p>
+<p>But let&rsquo;s set the value then. Do not forget that on first render the ref has a value of null.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, {
+    <span style="color:#a6e22e">CSSProperties</span>,
+    <span style="color:#a6e22e">PropsWithChildren</span>,
+    <span style="color:#a6e22e">useEffect</span>,
+    <span style="color:#a6e22e">useRef</span>,
+    <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
 
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Sticky</span>(<span style="color:#a6e22e">props</span>: <span style="color:#66d9ef">PropsWithChildren</span><span style="color:#f92672">&lt;</span>{}<span style="color:#f92672">&gt;</span>) {
     <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">offset</span>, <span style="color:#a6e22e">setOffset</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">useState</span>&lt;<span style="color:#f92672">number</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">undefined</span>&gt;(<span style="color:#66d9ef">undefined</span>);
@@ -260,9 +274,10 @@ Zero can be a valid value but then you don&rsquo;t know if zero is initial value
 
     <span style="color:#a6e22e">useEffect</span>(() <span style="color:#f92672">=&gt;</span> {
         <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>) {
-            <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">boundingRectangle</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">getBoundingClientRect</span>()
             <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">offset</span>) {
-                <span style="color:#a6e22e">setOffset</span>(<span style="color:#a6e22e">boundingRectangle</span>.<span style="color:#a6e22e">y</span>);
+                <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">boundingRect</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>
+                    .<span style="color:#a6e22e">getBoundingClientRect</span>();
+                <span style="color:#a6e22e">setOffset</span>(<span style="color:#a6e22e">boundingRect</span>.<span style="color:#a6e22e">y</span>);
             }
         }
     });
@@ -274,9 +289,14 @@ Zero can be a valid value but then you don&rsquo;t know if zero is initial value
     );
 }
 </code></pre></div><p>This will set the offset if it wasn&rsquo;t set yet. Which means that this piece of code will only trigger one state change and therefore but a single additional render.
-Which is of course something we want, as with the growingly complex pages the less render - the fewer sloweness user will experience.</p>
+Which is of course something we want, as with the growingly complex pages the less render - the less sloweness user will experience.</p>
 <p>Now let&rsquo;s also set the style finally with what we need:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, { <span style="color:#a6e22e">CSSProperties</span>, <span style="color:#a6e22e">PropsWithChildren</span>, <span style="color:#a6e22e">useEffect</span>, <span style="color:#a6e22e">useRef</span>, <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, {
+    <span style="color:#a6e22e">CSSProperties</span>,
+    <span style="color:#a6e22e">PropsWithChildren</span>,
+    <span style="color:#a6e22e">useEffect</span>,
+    <span style="color:#a6e22e">useRef</span>,
+    <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
 
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Sticky</span>(<span style="color:#a6e22e">props</span>: <span style="color:#66d9ef">PropsWithChildren</span><span style="color:#f92672">&lt;</span>{}<span style="color:#f92672">&gt;</span>) {
     <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">offset</span>, <span style="color:#a6e22e">setOffset</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">useState</span>&lt;<span style="color:#f92672">number</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">undefined</span>&gt;(<span style="color:#66d9ef">undefined</span>);
@@ -286,8 +306,9 @@ Which is of course something we want, as with the growingly complex pages the le
     <span style="color:#a6e22e">useEffect</span>(() <span style="color:#f92672">=&gt;</span> {
         <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>) {
             <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">offset</span>) {
-                <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">boundingRectangle</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">getBoundingClientRect</span>()
-                <span style="color:#a6e22e">setOffset</span>(<span style="color:#a6e22e">boundingRectangle</span>.<span style="color:#a6e22e">y</span>);
+                <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">boundingRect</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>
+                    .<span style="color:#a6e22e">getBoundingClientRect</span>();
+                <span style="color:#a6e22e">setOffset</span>(<span style="color:#a6e22e">boundingRect</span>.<span style="color:#a6e22e">y</span>);
             }
         }
     });
@@ -306,11 +327,16 @@ Which is of course something we want, as with the growingly complex pages the le
 }
 </code></pre></div><p>Here we use a useEffect with a guard - <code>[offset]</code>. Well, that&rsquo;s because we only want to run this effect whenever the offset changes.<br>
 This will therefore result in only one additional render as well.</p>
-<p>Let&rsquo;s run this. Now it should remein in the same place when you scroll while adding the minimal number of renders.
+<p>Let&rsquo;s run this. Now it should remain in the same place when you scroll while adding the minimal number of renders.
 This leaves us with the last issue to solve - as soon as the style is set the space which was occupied by out component will become vacant and will be filled up by other components.<br>
-What we will do to prevent this - create an empty invisible element with the same height as our children and place it there to keep the spae occupied.</p>
+What we will do to prevent this - create an empty invisible element with the same height as our children and place it there to keep the space occupied.</p>
 <p>This brings us to the final code:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, { <span style="color:#a6e22e">CSSProperties</span>, <span style="color:#a6e22e">PropsWithChildren</span>, <span style="color:#a6e22e">useEffect</span>, <span style="color:#a6e22e">useRef</span>, <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">import</span> <span style="color:#a6e22e">React</span>, {
+    <span style="color:#a6e22e">CSSProperties</span>,
+    <span style="color:#a6e22e">PropsWithChildren</span>,
+    <span style="color:#a6e22e">useEffect</span>,
+    <span style="color:#a6e22e">useRef</span>,
+    <span style="color:#a6e22e">useState</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;react&#39;</span>;
 
 <span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Sticky</span>(<span style="color:#a6e22e">props</span>: <span style="color:#66d9ef">PropsWithChildren</span><span style="color:#f92672">&lt;</span>{}<span style="color:#f92672">&gt;</span>) {
     <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">offset</span>, <span style="color:#a6e22e">setOffset</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">useState</span>&lt;<span style="color:#f92672">number</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">undefined</span>&gt;(<span style="color:#66d9ef">undefined</span>);
@@ -320,13 +346,13 @@ What we will do to prevent this - create an empty invisible element with the sam
 
     <span style="color:#a6e22e">useEffect</span>(() <span style="color:#f92672">=&gt;</span> {
         <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>) {
-            <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">boundingRectangle</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">getBoundingClientRect</span>()
+            <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">boundingRect</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">elementRef</span>.<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">getBoundingClientRect</span>();
             <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">offset</span>) {
-                <span style="color:#a6e22e">setOffset</span>(<span style="color:#a6e22e">boundingRectangle</span>.<span style="color:#a6e22e">y</span>);
+                <span style="color:#a6e22e">setOffset</span>(<span style="color:#a6e22e">boundingRect</span>.<span style="color:#a6e22e">y</span>);
             }
 
-            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">height</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">boundingRectangle</span>.<span style="color:#a6e22e">height</span>) {
-                <span style="color:#a6e22e">setHeight</span>(<span style="color:#a6e22e">boundingRectangle</span>.<span style="color:#a6e22e">height</span>);
+            <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">height</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">boundingRect</span>.<span style="color:#a6e22e">height</span>) {
+                <span style="color:#a6e22e">setHeight</span>(<span style="color:#a6e22e">boundingRect</span>.<span style="color:#a6e22e">height</span>);
             }
         }
     });
@@ -346,7 +372,7 @@ What we will do to prevent this - create an empty invisible element with the sam
         &lt;/&gt;
     );
 }
-</code></pre></div><p><code>height !== boundingRectangle.height</code> once again limits the number of renders that we generate as a result of state changes.<br>
+</code></pre></div><p><code>height !== boundingRect.height</code> once again limits the number of renders that we generate as a result of state changes.<br>
 Empty <code>&lt;&gt;</code> tag allows us to nest several components under one while not creating a DOM element. This is a shortcut for <code>&lt;Fragment&gt;</code>.</p>
 <p>Thanks for sticking around!<br>
 I hope this gave you some ideas at the very least and maybe also was helpful in seeing how some React hooks could be used.
