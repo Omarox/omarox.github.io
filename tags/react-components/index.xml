@@ -21,7 +21,7 @@
 &lt;p&gt;Today we will look into activity tracking.&lt;br&gt;
 What do I mean by that?&lt;br&gt;
 Well, for some apps you might want to log the user out or at least lock the app till pin is entered if the user was inactive for a set period of time, say 10 minutes.&lt;/p&gt;
-&lt;p&gt;While there isn&amp;rsquo;t a universal solution to this there are a few simple one that will work for a lot of applications.&lt;/p&gt;
+&lt;p&gt;While there isn&amp;rsquo;t a universal solution to this there are a few simple ones that will work for a lot of applications.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s begin with something simple. Let&amp;rsquo;s imagine an app, where it&amp;rsquo;s mostly just static screens or those that load the data once when they are open.&lt;br&gt;
 Well, we can then track navigation between those pages as an activity.&lt;br&gt;
 This isn&amp;rsquo;t perfect, as activities like scrolling through text or just tapping the screen randomly will not be registered.&lt;br&gt;
