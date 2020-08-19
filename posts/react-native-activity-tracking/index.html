@@ -1,0 +1,233 @@
+<!doctype html>
+
+<html lang="en-us">
+
+<head>
+  <title>React Native Activity Tracking - Bohdan Yarema - Blog</title>
+  <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="The HTML5 Herald" />
+<meta name="author" content="Bohdan Yarema" /><meta property="og:title" content="React Native Activity Tracking" />
+<meta property="og:description" content="Hello and welcome!
+Today we will look into activity tracking.
+What do I mean by that?
+Well, for some apps you might want to log the user out or at least lock the app till pin is entered if the user was inactive for a set period of time, say 10 minutes.
+While there isn&rsquo;t a universal solution to this there are a few simple one that will work for a lot of applications." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://omarox.github.io/posts/react-native-activity-tracking/" />
+<meta property="article:published_time" content="2020-08-19T16:47:26+02:00" />
+<meta property="article:modified_time" content="2020-08-19T16:47:26+02:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="React Native Activity Tracking"/>
+<meta name="twitter:description" content="Hello and welcome!
+Today we will look into activity tracking.
+What do I mean by that?
+Well, for some apps you might want to log the user out or at least lock the app till pin is entered if the user was inactive for a set period of time, say 10 minutes.
+While there isn&rsquo;t a universal solution to this there are a few simple one that will work for a lot of applications."/>
+
+<meta name="generator" content="Hugo 0.74.3" />
+    
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://omarox.github.io/fontawesome/css/all.min.css" />
+  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab|Ruda" />
+  
+  
+  <link rel="stylesheet" type="text/css" href="/css/styles.css" /></head>
+
+<body>
+  <div id="container">
+    <header>
+      <h1>
+                <a href="/">Bohdan Yarema - Blog</a>
+            </h1>
+
+      <ul id="social-media">
+             <li>
+               <a href="https://github.com/omarox" title="GitHub">
+               <i class="fab fa-github fa-lg"></i>
+               </a>
+             </li>
+             <li>
+               <a href="https://linkedin.com/in/bohdan-yarema-77b67bb7" title="LinkedIn">
+               <i class="fab fa-linkedin fa-lg"></i>
+               </a>
+             </li>
+             <li>
+               <a href="https://codereview.stackexchange.com/users/96664/bohdan-yarema" title="CodeReview">
+               <i class="fab fa-stack-exchange fa-lg"></i>
+               </a>
+             </li>
+      </ul>
+      
+    </header>
+
+    
+<nav>
+    <ul>
+        
+        <li>
+            <a class="" href="/">
+                <i class="fa-li fa  fa-lg"></i><span>Posts</span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="" href="/about/">
+                <i class="fa-li fa  fa-lg"></i><span>About</span>
+            </a>
+        </li>
+        
+    </ul>
+</nav>
+
+
+    <main>
+
+
+
+
+<article>
+
+    <h1>React Native Activity Tracking</h1>
+
+    
+      <aside>
+    <ul>
+        <li>
+            <time class="post-date" datetime="2020-08-19T16:47:26&#43;02:00">Aug 19, 2020</time>
+        </li>
+        
+
+        
+        <li>
+            <em>
+                
+                    
+                    <a href="/tags/javascript">#javascript</a>
+                
+                    , 
+                    <a href="/tags/typescript">#typescript</a>
+                
+                    , 
+                    <a href="/tags/react-native">#react-native</a>
+                
+                    , 
+                    <a href="/tags/react-hooks">#react-hooks</a>
+                
+            </em>
+        </li>
+        
+
+        <li>3 minutes read</li>
+    </ul>
+</aside>
+
+    
+
+    
+<div class="featured_image">
+    <a href="https://omarox.github.io/posts/react-native-activity-tracking/" title="React Native Activity Tracking">
+        <img src="">
+    </a>
+</div>
+
+
+
+    <p>Hello and welcome!</p>
+<p>Today we will look into activity tracking.<br>
+What do I mean by that?<br>
+Well, for some apps you might want to log the user out or at least lock the app till pin is entered if the user was inactive for a set period of time, say 10 minutes.</p>
+<p>While there isn&rsquo;t a universal solution to this there are a few simple one that will work for a lot of applications.</p>
+<p>Let&rsquo;s begin with something simple. Let&rsquo;s imagine an app, where it&rsquo;s mostly just static screens or those that load the data once when they are open.<br>
+Well, we can then track navigation between those pages as an activity.<br>
+This isn&rsquo;t perfect, as activities like scrolling through text or just tapping the screen randomly will not be registered.<br>
+But we&rsquo;ll talk about more tricks soon. Have patience.</p>
+<p>For this particular example I used <a href="https://reactnavigation.org/">react-navigation</a> package for navigation.<br>
+It has a very useful event that we can use - <code>navigation.addListener('state' =&gt; {})</code>.<br>
+This triggers every time a navigation happens. And that includes navigation in nested navigators which is awesome!<br>
+However, this subscription must happen from within a navigator or a page inside root navigator.</p>
+<p>Basically, if we have a root navigator like this</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>&lt;<span style="color:#f92672">Stack.Navigator</span>&gt;
+    &lt;<span style="color:#f92672">Stack.Screen</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Home&#34;</span> <span style="color:#a6e22e">component</span><span style="color:#f92672">=</span>{<span style="color:#a6e22e">HomeScreen</span>} /&gt;
+    &lt;<span style="color:#f92672">Stack.Screen</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Questionnaire&#34;</span> <span style="color:#a6e22e">component</span><span style="color:#f92672">=</span>{<span style="color:#a6e22e">QuestionnaireNavigator</span>} /&gt;
+&lt;/<span style="color:#f92672">Stack.Navigator</span>&gt;
+<span style="color:#75715e">// ...
+</span></code></pre></div><p>then we need to subscribe in both <code>HomeScreen</code> and <code>QuestionnaireNavigator</code>.
+Note that if we are only tracking activity after login, then LoginNavigator should not have a subscription.</p>
+<p>Let&rsquo;s create a reusable hook to do that for us!</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-typescript" data-lang="typescript"><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">useActivityTracking() {</span>
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">navigation</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">useNavigation</span>();
+    <span style="color:#a6e22e">useEffect</span>(() <span style="color:#f92672">=&gt;</span> {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">unsubscribe</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">navigation</span>.<span style="color:#a6e22e">addListener</span>(<span style="color:#e6db74">&#39;state&#39;</span>, () <span style="color:#f92672">=&gt;</span> {
+            <span style="color:#a6e22e">activityTracker</span>.<span style="color:#a6e22e">activity</span>();
+        });
+
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">unsubscribe</span>;
+    }, []);
+}
+</code></pre></div><p><code>activityTracker</code> is a something that you will implement which will track the latest activity and do something on a timer. That I will leave up to you.
+You can use Redux, Mobx or plain react hooks like <code>useContext</code> for this.
+As an extra tip here - don&rsquo;t call a <code>timeOut</code> of 10 minutes because it will not work when the app is in the background. That is a limitation of RN.
+Rather do a <code>timeInterval</code> which will every second check if 10 minutes have already passed since the last activity.</p>
+<p>Let&rsquo;s talk a bit about what we just wrote.<br>
+<code>useEffect</code> hook is used with the guard <code>[]</code> which means that it will only be called on initial render.
+Returning <code>unsubscribe</code> there means that it will unsubscribe when the screen or navigator is unmounted.
+Because it&rsquo;s a good practise in software engineer to clean up after oneself. This way we can avoid unnecessary memory leaks.</p>
+<p>Now, what about applications with a bit more dynamic screens with buttons and other interactions?<br>
+Well, we can still call our <code>activityTracker.activity()</code>. And if all actions trigger a request towards the server, then instead of doing it on every action you can just put this code into a service responsible for requests.</p>
+<p>With these two tricks you can easily cover most scenarios.<br>
+Thank you for reading and I see you next time!</p>
+
+
+</article>
+
+
+<section class="post-nav">
+    <ul>
+        
+        <li>
+            <a href="https://omarox.github.io/posts/react-sticky-component/"><i class="fa fa-chevron-circle-left"></i> Sticky Component in React with hooks</a>
+        </li>
+        
+        
+    </ul>
+</section>
+  
+    
+    
+  
+
+
+
+
+
+</main>
+    <footer>
+        <h6> |
+            Rendered by <a href="https://gohugo.io" title="Hugo">Hugo</a> |
+            <a href="https://omarox.github.io/index.xml">Subscribe </a></h6>
+    </footer>
+</div>
+<script src="/js/scripts.js"></script>
+
+  
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-173533564-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+</body>
+
+</html>
+

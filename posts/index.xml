@@ -6,10 +6,64 @@
    <description>Recent content in Posts on Bohdan Yarema - Blog</description>
    <generator>Hugo -- gohugo.io</generator>
    <language>en-us</language>
-   <lastBuildDate>Tue, 04 Aug 2020 18:10:11 +0200</lastBuildDate>
+   <lastBuildDate>Wed, 19 Aug 2020 16:47:26 +0200</lastBuildDate>
    
        <atom:link href="https://omarox.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
    
+   
+     <item>
+       <title>React Native Activity Tracking</title>
+       <link>https://omarox.github.io/posts/react-native-activity-tracking/</link>
+       <pubDate>Wed, 19 Aug 2020 16:47:26 +0200</pubDate>
+       
+       <guid>https://omarox.github.io/posts/react-native-activity-tracking/</guid>
+       <description>&lt;p&gt;Hello and welcome!&lt;/p&gt;
+&lt;p&gt;Today we will look into activity tracking.&lt;br&gt;
+What do I mean by that?&lt;br&gt;
+Well, for some apps you might want to log the user out or at least lock the app till pin is entered if the user was inactive for a set period of time, say 10 minutes.&lt;/p&gt;
+&lt;p&gt;While there isn&amp;rsquo;t a universal solution to this there are a few simple one that will work for a lot of applications.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s begin with something simple. Let&amp;rsquo;s imagine an app, where it&amp;rsquo;s mostly just static screens or those that load the data once when they are open.&lt;br&gt;
+Well, we can then track navigation between those pages as an activity.&lt;br&gt;
+This isn&amp;rsquo;t perfect, as activities like scrolling through text or just tapping the screen randomly will not be registered.&lt;br&gt;
+But we&amp;rsquo;ll talk about more tricks soon. Have patience.&lt;/p&gt;
+&lt;p&gt;For this particular example I used &lt;a href=&#34;https://reactnavigation.org/&#34;&gt;react-navigation&lt;/a&gt; package for navigation.&lt;br&gt;
+It has a very useful event that we can use - &lt;code&gt;navigation.addListener(&#39;state&#39; =&amp;gt; {})&lt;/code&gt;.&lt;br&gt;
+This triggers every time a navigation happens. And that includes navigation in nested navigators which is awesome!&lt;br&gt;
+However, this subscription must happen from within a navigator or a page inside root navigator.&lt;/p&gt;
+&lt;p&gt;Basically, if we have a root navigator like this&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;Stack.Navigator&lt;/span&gt;&amp;gt;
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;Stack.Screen&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Home&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;component&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;HomeScreen&lt;/span&gt;} /&amp;gt;
+    &amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;Stack.Screen&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Questionnaire&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;component&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;{&lt;span style=&#34;color:#a6e22e&#34;&gt;QuestionnaireNavigator&lt;/span&gt;} /&amp;gt;
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;Stack.Navigator&lt;/span&gt;&amp;gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;// ...
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;then we need to subscribe in both &lt;code&gt;HomeScreen&lt;/code&gt; and &lt;code&gt;QuestionnaireNavigator&lt;/code&gt;.
+Note that if we are only tracking activity after login, then LoginNavigator should not have a subscription.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s create a reusable hook to do that for us!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-typescript&#34; data-lang=&#34;typescript&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;export&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;default&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useActivityTracking() {&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;navigation&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;useNavigation&lt;/span&gt;();
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;useEffect&lt;/span&gt;(() &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;unsubscribe&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;navigation&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;addListener&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;state&amp;#39;&lt;/span&gt;, () &lt;span style=&#34;color:#f92672&#34;&gt;=&amp;gt;&lt;/span&gt; {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;activityTracker&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;activity&lt;/span&gt;();
+        });
+
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;unsubscribe&lt;/span&gt;;
+    }, []);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;activityTracker&lt;/code&gt; is a something that you will implement which will track the latest activity and do something on a timer. That I will leave up to you.
+You can use Redux, Mobx or plain react hooks like &lt;code&gt;useContext&lt;/code&gt; for this.
+As an extra tip here - don&amp;rsquo;t call a &lt;code&gt;timeOut&lt;/code&gt; of 10 minutes because it will not work when the app is in the background. That is a limitation of RN.
+Rather do a &lt;code&gt;timeInterval&lt;/code&gt; which will every second check if 10 minutes have already passed since the last activity.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s talk a bit about what we just wrote.&lt;br&gt;
+&lt;code&gt;useEffect&lt;/code&gt; hook is used with the guard &lt;code&gt;[]&lt;/code&gt; which means that it will only be called on initial render.
+Returning &lt;code&gt;unsubscribe&lt;/code&gt; there means that it will unsubscribe when the screen or navigator is unmounted.
+Because it&amp;rsquo;s a good practise in software engineer to clean up after oneself. This way we can avoid unnecessary memory leaks.&lt;/p&gt;
+&lt;p&gt;Now, what about applications with a bit more dynamic screens with buttons and other interactions?&lt;br&gt;
+Well, we can still call our &lt;code&gt;activityTracker.activity()&lt;/code&gt;. And if all actions trigger a request towards the server, then instead of doing it on every action you can just put this code into a service responsible for requests.&lt;/p&gt;
+&lt;p&gt;With these two tricks you can easily cover most scenarios.&lt;br&gt;
+Thank you for reading and I see you next time!&lt;/p&gt;
+</description>
+     </item>
    
      <item>
        <title>Sticky Component in React with hooks</title>
