@@ -171,8 +171,8 @@ Note that if we are only tracking activity after login, then LoginNavigator shou
 }
 </code></pre></div><p><code>activityTracker</code> is a something that you will implement which will track the latest activity and do something on a timer. That I will leave up to you.
 You can use Redux, Mobx or plain react hooks like <code>useContext</code> for this.
-As an extra tip here - don&rsquo;t call a <code>timeOut</code> of 10 minutes because it will not work when the app is in the background. That is a limitation of RN.
-Rather do a <code>timeInterval</code> which will every second check if 10 minutes have already passed since the last activity.</p>
+As an extra tip here - don&rsquo;t call a <code>setTimeout</code> of 10 minutes because it will not work when the app is in the background. That is a limitation of RN.
+Rather do a <code>setInterval</code> which will every second check if 10 minutes have already passed since the last activity.</p>
 <p>Let&rsquo;s talk a bit about what we just wrote.<br>
 <code>useEffect</code> hook is used with the guard <code>[]</code> which means that it will only be called on initial render.
 Returning <code>unsubscribe</code> there means that it will unsubscribe when the screen or navigator is unmounted.

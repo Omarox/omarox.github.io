@@ -51,8 +51,8 @@ Note that if we are only tracking activity after login, then LoginNavigator shou
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;activityTracker&lt;/code&gt; is a something that you will implement which will track the latest activity and do something on a timer. That I will leave up to you.
 You can use Redux, Mobx or plain react hooks like &lt;code&gt;useContext&lt;/code&gt; for this.
-As an extra tip here - don&amp;rsquo;t call a &lt;code&gt;timeOut&lt;/code&gt; of 10 minutes because it will not work when the app is in the background. That is a limitation of RN.
-Rather do a &lt;code&gt;timeInterval&lt;/code&gt; which will every second check if 10 minutes have already passed since the last activity.&lt;/p&gt;
+As an extra tip here - don&amp;rsquo;t call a &lt;code&gt;setTimeout&lt;/code&gt; of 10 minutes because it will not work when the app is in the background. That is a limitation of RN.
+Rather do a &lt;code&gt;setInterval&lt;/code&gt; which will every second check if 10 minutes have already passed since the last activity.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s talk a bit about what we just wrote.&lt;br&gt;
 &lt;code&gt;useEffect&lt;/code&gt; hook is used with the guard &lt;code&gt;[]&lt;/code&gt; which means that it will only be called on initial render.
 Returning &lt;code&gt;unsubscribe&lt;/code&gt; there means that it will unsubscribe when the screen or navigator is unmounted.
